@@ -9,7 +9,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 
-const API_URL = "https://to-do-s8nx.onrender.com";
+const API_URL = "https://to-do-s8nx.onrender.com/api/";
 
 function App() {
   const [todos, setTodos] = useState([]);
