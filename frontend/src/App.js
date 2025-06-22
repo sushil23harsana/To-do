@@ -28,8 +28,19 @@ function App() {
 
   const fetchTodos = () => {
     axios.get(API_URL)
-      .then(res => setTodos(res.data))
-      .catch(err => console.error(err));
+      .then(res => {
+        if (Array.isArray(res.data)) {
+          setTodos(res.data);
+        } else if (Array.isArray(res.data.todos)) {
+          setTodos(res.data.todos);
+        } else {
+          setTodos([]);
+        }
+      })
+      .catch(err => {
+        setTodos([]);
+        console.error(err);
+      });
   };
 
   const addTodo = () => {
@@ -58,7 +69,7 @@ function App() {
 
   const fetchAnalytics = () => {
     setLoadingAnalytics(true);
-    axios.get("http://127.0.0.1:8000/api/analytics/", {
+    axios.get(`${API_URL}analytics/`, {
       params: {
         start: format(startDate, 'yyyy-MM-dd'),
         end: format(endDate, 'yyyy-MM-dd')
@@ -133,7 +144,7 @@ function App() {
                     No todos yet. Add one!
                   </Typography>
                 )}
-                {todos.map(todo => (
+                {Array.isArray(todos) && todos.map(todo => (
                   <ListItem
                     key={todo.id}
                     sx={{
