@@ -82,16 +82,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'todo_db',
-        # 'USER': 'postgres',
-        # 'PASSWORD': 'Sushilnancy@23',
-        # 'HOST': 'localhost',
-        # 'PORT': '5432',
-        dj_database_url.config(
-           default='postgresql://sushil:VhjRpELN8C388CyShPRyAn7FsAt3q9cs@dpg-d1c53tp5pdvs73egeo70-a.oregon-postgres.render.com/todo_db_yb81')
-    }
+    'default': dj_database_url.config(
+        default='postgresql://sushil:VhjRpELN8C388CyShPRyAn7FsAt3q9cs@dpg-d1c53tp5pdvs73egeo70-a.oregon-postgres.render.com/todo_db_yb81'
+    )
 }
 
 
