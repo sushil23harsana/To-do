@@ -19,6 +19,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Sidebar from './Sidebar';
 import TodoItem from "./TodoItem";
 import DashboardPage from './DashboardPage';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const API_BASE = process.env.REACT_APP_API_BASE;
@@ -35,6 +37,7 @@ function App() {
   const [mode, setMode] = useState('light');
   const [analyticsStatus, setAnalyticsStatus] = useState('all');
   const [analyticsKeyword, setAnalyticsKeyword] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const theme = getTheme(mode);
 
@@ -115,15 +118,26 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default', color: 'text.primary' }}>
-          <Sidebar mode={mode} toggleTheme={toggleTheme} todos={todos} />
-          <Box sx={{ flexGrow: 1, ml: '240px', py: 6 }}>
+          <Sidebar mode={mode} toggleTheme={toggleTheme} todos={todos} open={sidebarOpen} onToggle={() => setSidebarOpen(o => !o)} />
+          <Box sx={{ flexGrow: 1, ml: { md: sidebarOpen ? '240px' : '72px' }, transition: 'margin 0.3s', py: 6 }}>
+            {/* Sidebar toggle button */}
+            <Box sx={{ position: 'absolute', top: 24, left: { md: sidebarOpen ? 250 : 82, xs: 16 }, zIndex: 1201, transition: 'left 0.3s' }}>
+              <Button
+                onClick={() => setSidebarOpen(o => !o)}
+                variant="outlined"
+                size="small"
+                sx={{ minWidth: 0, p: 1, borderRadius: 2, boxShadow: 1 }}
+              >
+                {sidebarOpen ? <ChevronLeftIcon /> : <MenuIcon />}
+              </Button>
+            </Box>
             <Container maxWidth="md" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
               <Routes>
                 <Route path="/" element={
-                  <Grid container spacing={4} alignItems="flex-start" justifyContent="center">
-                    {/* Add Todo Section */}
-                    <Grid item xs={12} md={6}>
-                      <Paper elevation={3} sx={{ maxWidth: 480, mx: 'auto', px: 3, py: 4, bgcolor: 'primary.50', boxShadow: 3, borderRadius: 4 }}>
+                  <Grid container spacing={4} alignItems="stretch" justifyContent="center">
+                    {/* Add Todo Section (always left) */}
+                    <Grid item xs={12} md={6} order={{ xs: 1, md: 1 }}>
+                      <Paper elevation={2} sx={{ maxWidth: 500, mx: 'auto', px: 3, py: 5, bgcolor: '#fff', color: 'inherit', boxShadow: 2, borderRadius: 4, minHeight: 420, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                         <Typography variant="h6" fontWeight={700} color="primary.main" sx={{ mb: 1, letterSpacing: 1 }}>
                           Add a New Todo
                         </Typography>
@@ -139,7 +153,7 @@ function App() {
                             onChange={e => setTitle(e.target.value)}
                             onKeyDown={e => e.key === "Enter" && addTodo()}
                             size="medium"
-                            sx={{ bgcolor: 'background.default' }}
+                            sx={{ bgcolor: 'background.default', borderRadius: 2 }}
                           />
                           <TextField
                             label="Description"
@@ -149,7 +163,7 @@ function App() {
                             onChange={e => setDescription(e.target.value)}
                             onKeyDown={e => e.key === "Enter" && addTodo()}
                             size="medium"
-                            sx={{ bgcolor: 'background.default' }}
+                            sx={{ bgcolor: 'background.default', borderRadius: 2 }}
                           />
                           <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
@@ -162,16 +176,16 @@ function App() {
                                   fullWidth
                                   size="medium"
                                   variant="outlined"
-                                  sx={{ bgcolor: 'background.default' }}
+                                  sx={{ bgcolor: 'background.default', borderRadius: 2 }}
                                 />
                               )}
                             />
                           </LocalizationProvider>
                           <Button
                             variant="contained"
-                            color="primary"
+                            color="secondary"
                             onClick={addTodo}
-                            sx={{ fontWeight: 600, height: '48px', borderRadius: 2, boxShadow: 1, minWidth: 120, mt: 1 }}
+                            sx={{ fontWeight: 600, height: '48px', borderRadius: 2, boxShadow: 2, minWidth: 120, mt: 1 }}
                             fullWidth
                           >
                             Add
@@ -181,15 +195,15 @@ function App() {
                     </Grid>
                     {/* Vertical Divider for desktop */}
                     <Grid item md={0.1} sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'stretch', justifyContent: 'center' }}>
-                      <Box sx={{ width: 2, bgcolor: 'divider', borderRadius: 1, height: '100%' }} />
+                      <Box sx={{ width: 3, bgcolor: 'divider', borderRadius: 1, height: '100%' }} />
                     </Grid>
-                    {/* Todo List Section */}
-                    <Grid item xs={12} md={6}>
-                      <Box sx={{ px: 2, py: 3 }}>
-                        <Typography variant="subtitle1" fontWeight={600} gutterBottom color="secondary.main" sx={{ mb: 2, letterSpacing: 1 }}>
+                    {/* Todo List Section (always right) */}
+                    <Grid item xs={12} md={6} order={{ xs: 2, md: 2 }}>
+                      <Paper elevation={2} sx={{ p: 4, borderRadius: 4, bgcolor: '#fff', minHeight: 420, boxShadow: 2 }}>
+                        <Typography variant="subtitle1" fontWeight={700} gutterBottom color="primary.main" sx={{ mb: 2, letterSpacing: 1 }}>
                           Todo List
                         </Typography>
-                        <Paper elevation={0} sx={{ p: 3, borderRadius: 3, bgcolor: 'background.default', border: '1px solid', borderColor: 'divider', maxHeight: '60vh', overflowY: 'auto' }}>
+                        <Box sx={{ maxHeight: '50vh', overflowY: 'auto' }}>
                           <List sx={{ p: 0 }}>
                             {todos.length === 0 && (
                               <Typography align="center" color="text.secondary" sx={{ py: 2 }}>
@@ -207,8 +221,8 @@ function App() {
                               </React.Fragment>
                             ))}
                           </List>
-                        </Paper>
-                      </Box>
+                        </Box>
+                      </Paper>
                     </Grid>
                   </Grid>
                 } />
