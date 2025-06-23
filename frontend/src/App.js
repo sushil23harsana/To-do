@@ -123,7 +123,7 @@ function App() {
                   <Grid container spacing={4} alignItems="flex-start" justifyContent="center">
                     {/* Add Todo Section */}
                     <Grid item xs={12} md={6}>
-                      <Box sx={{ maxWidth: 480, mx: 'auto', px: 2, py: 3 }}>
+                      <Paper elevation={3} sx={{ maxWidth: 480, mx: 'auto', px: 3, py: 4, bgcolor: 'primary.50', boxShadow: 3, borderRadius: 4 }}>
                         <Typography variant="h6" fontWeight={700} color="primary.main" sx={{ mb: 1, letterSpacing: 1 }}>
                           Add a New Todo
                         </Typography>
@@ -177,12 +177,16 @@ function App() {
                             Add
                           </Button>
                         </Stack>
-                      </Box>
+                      </Paper>
+                    </Grid>
+                    {/* Vertical Divider for desktop */}
+                    <Grid item md={0.1} sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'stretch', justifyContent: 'center' }}>
+                      <Box sx={{ width: 2, bgcolor: 'divider', borderRadius: 1, height: '100%' }} />
                     </Grid>
                     {/* Todo List Section */}
                     <Grid item xs={12} md={6}>
                       <Box sx={{ px: 2, py: 3 }}>
-                        <Typography variant="subtitle1" fontWeight={600} gutterBottom color="text.secondary" sx={{ mb: 2, letterSpacing: 1 }}>
+                        <Typography variant="subtitle1" fontWeight={600} gutterBottom color="secondary.main" sx={{ mb: 2, letterSpacing: 1 }}>
                           Todo List
                         </Typography>
                         <Paper elevation={0} sx={{ p: 3, borderRadius: 3, bgcolor: 'background.default', border: '1px solid', borderColor: 'divider', maxHeight: '60vh', overflowY: 'auto' }}>
