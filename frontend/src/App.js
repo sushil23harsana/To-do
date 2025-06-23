@@ -10,6 +10,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 
 const API_URL = process.env.REACT_APP_API_URL;
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -69,7 +70,7 @@ function App() {
 
   const fetchAnalytics = () => {
     setLoadingAnalytics(true);
-    axios.get(`${API_URL}analytics/`, {
+    axios.get(`${API_BASE}analytics/`, {
       params: {
         start: format(startDate, 'yyyy-MM-dd'),
         end: format(endDate, 'yyyy-MM-dd')
