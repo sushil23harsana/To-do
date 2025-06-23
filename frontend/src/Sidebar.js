@@ -4,6 +4,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import InsightsIcon from '@mui/icons-material/Insights';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Link, useLocation } from 'react-router-dom';
 import MotivationalQuote from './MotivationalQuote';
 import StreakTracker from './StreakTracker';
@@ -40,6 +41,12 @@ const Sidebar = ({ mode, toggleTheme, todos = [] }) => {
         </Box>
         <Divider />
         <List sx={{ flexGrow: 1, mt: 2 }}>
+          <ListItem button component={Link} to="/dashboard" selected={location.pathname === '/dashboard'} sx={{ borderRadius: 2, mb: 1 }}>
+            <ListItemIcon>
+              <DashboardIcon color={location.pathname === '/dashboard' ? 'primary' : 'inherit'} />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItem>
           <ListItem button component={Link} to="/" selected={location.pathname === '/'} sx={{ borderRadius: 2, mb: 1 }}>
             <ListItemIcon>
               <ListAltIcon color={location.pathname === '/' ? 'primary' : 'inherit'} />

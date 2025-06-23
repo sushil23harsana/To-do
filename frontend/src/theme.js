@@ -4,21 +4,22 @@ const getTheme = (mode) => createTheme({
   palette: {
     mode,
     primary: {
-      main: '#6C63FF', // Modern purple
+      main: '#3A8DFF', // Soft blue
       contrastText: '#fff',
     },
     secondary: {
-      main: '#FF6584', // Modern pink
+      main: '#FF6B6B', // Vibrant coral
       contrastText: '#fff',
     },
     background: {
-      default: mode === 'dark' ? '#181A20' : '#F7F8FA',
+      default: mode === 'dark' ? '#181A20' : '#F4F8FB', // Gentle light background
       paper: mode === 'dark' ? '#23272F' : '#fff',
     },
     text: {
-      primary: mode === 'dark' ? '#fff' : '#222B45',
-      secondary: mode === 'dark' ? '#B0B3B8' : '#8F9BB3',
+      primary: mode === 'dark' ? '#F4F8FB' : '#222B45',
+      secondary: mode === 'dark' ? '#B0B3B8' : '#6B7280',
     },
+    divider: mode === 'dark' ? '#2D3748' : '#E0E7EF',
   },
   typography: {
     fontFamily: [
