@@ -2,25 +2,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Container, Typography, TextField, Button, List, ListItem, ListItemText,
-  Checkbox, IconButton, Paper, Box, Stack, Card, Grid
+  Checkbox, IconButton, Paper, Box, Stack, MenuItem
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AnalyticsPage from "./AnalyticsPage";
 import { ThemeProvider } from '@mui/material/styles';
 import getTheme from './theme';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import InputAdornment from '@mui/material/InputAdornment';
 import Sidebar from './Sidebar';
-import TodoItem from "./TodoItem";
 import DashboardPage from './DashboardPage';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const API_BASE = process.env.REACT_APP_API_BASE;
@@ -69,7 +65,7 @@ function App() {
       title,
       description,
       completed: false,
-      date: date.toISOString().split('T')[0]
+      date: date.toISOString().split('T')[0],
     })
       .then(() => {
         setTitle("");
@@ -131,100 +127,113 @@ function App() {
                 {sidebarOpen ? <ChevronLeftIcon /> : <MenuIcon />}
               </Button>
             </Box>
-            <Container maxWidth="md" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
+            <Container maxWidth="md" sx={{ py: 6 }}>
               <Routes>
                 <Route path="/" element={
-                  <Grid container spacing={4} alignItems="stretch" justifyContent="center">
-                    {/* Add Todo Section (always left) */}
-                    <Grid item xs={12} md={6} order={{ xs: 1, md: 1 }}>
-                      <Paper elevation={2} sx={{ maxWidth: 500, mx: 'auto', px: 3, py: 5, bgcolor: '#fff', color: 'inherit', boxShadow: 2, borderRadius: 4, minHeight: 420, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <Typography variant="h6" fontWeight={700} color="primary.main" sx={{ mb: 1, letterSpacing: 1 }}>
-                          Add a New Todo
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                          Stay organized by adding your next task below.
-                        </Typography>
-                        <Stack spacing={2}>
-                          <TextField
-                            label="Title"
-                            variant="outlined"
-                            fullWidth
-                            value={title}
-                            onChange={e => setTitle(e.target.value)}
-                            onKeyDown={e => e.key === "Enter" && addTodo()}
-                            size="medium"
-                            sx={{ bgcolor: 'background.default', borderRadius: 2 }}
-                          />
-                          <TextField
-                            label="Description"
-                            variant="outlined"
-                            fullWidth
-                            value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            onKeyDown={e => e.key === "Enter" && addTodo()}
-                            size="medium"
-                            sx={{ bgcolor: 'background.default', borderRadius: 2 }}
-                          />
-                          <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DatePicker
-                              label="Date"
-                              value={date}
-                              onChange={setDate}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  fullWidth
-                                  size="medium"
-                                  variant="outlined"
-                                  sx={{ bgcolor: 'background.default', borderRadius: 2 }}
-                                />
-                              )}
-                            />
-                          </LocalizationProvider>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={addTodo}
-                            sx={{ fontWeight: 600, height: '48px', borderRadius: 2, boxShadow: 2, minWidth: 120, mt: 1 }}
-                            fullWidth
-                          >
-                            Add
-                          </Button>
-                        </Stack>
-                      </Paper>
-                    </Grid>
-                    {/* Vertical Divider for desktop */}
-                    <Grid item md={0.1} sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'stretch', justifyContent: 'center' }}>
-                      <Box sx={{ width: 3, bgcolor: 'divider', borderRadius: 1, height: '100%' }} />
-                    </Grid>
-                    {/* Todo List Section (always right) */}
-                    <Grid item xs={12} md={6} order={{ xs: 2, md: 2 }}>
-                      <Paper elevation={2} sx={{ p: 4, borderRadius: 4, bgcolor: '#fff', minHeight: 420, boxShadow: 2 }}>
-                        <Typography variant="subtitle1" fontWeight={700} gutterBottom color="primary.main" sx={{ mb: 2, letterSpacing: 1 }}>
-                          Todo List
-                        </Typography>
-                        <Box sx={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                          <List sx={{ p: 0 }}>
-                            {todos.length === 0 && (
-                              <Typography align="center" color="text.secondary" sx={{ py: 2 }}>
-                                No todos yet. Add one!
-                              </Typography>
+                  <Box>
+                    {/* Add Todo Section */}
+                    <Paper elevation={2} sx={{ p: 4, borderRadius: 3, bgcolor: 'background.paper', mb: 4 }}>
+                      <Typography variant="subtitle1" fontWeight={700} color="text.secondary" sx={{ mb: 2, letterSpacing: 1 }}>
+                        Add a New Todo
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                        Stay organized by adding your next task below.
+                      </Typography>
+                      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                        <TextField
+                          label="Title"
+                          variant="outlined"
+                          value={title}
+                          onChange={e => setTitle(e.target.value)}
+                          onKeyDown={e => e.key === "Enter" && addTodo()}
+                          size="small"
+                          sx={{ flex: 2 }}
+                        />
+                        <TextField
+                          label="Description"
+                          variant="outlined"
+                          value={description}
+                          onChange={e => setDescription(e.target.value)}
+                          onKeyDown={e => e.key === "Enter" && addTodo()}
+                          size="small"
+                          sx={{ flex: 3 }}
+                        />
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <DatePicker
+                            label="Date"
+                            value={date}
+                            onChange={setDate}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                size="small"
+                                variant="outlined"
+                                sx={{ minWidth: 120 }}
+                              />
                             )}
-                            {Array.isArray(todos) && todos.map((todo, idx) => (
+                          />
+                        </LocalizationProvider>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={addTodo}
+                          sx={{ fontWeight: 600, height: 40, borderRadius: 2, minWidth: 100, boxShadow: 1 }}
+                        >
+                          Add
+                        </Button>
+                      </Stack>
+                    </Paper>
+                    {/* Todo List Section */}
+                    <Paper elevation={2} sx={{ p: 4, borderRadius: 3, bgcolor: 'background.paper' }}>
+                      <Typography variant="subtitle1" fontWeight={700} color="text.secondary" sx={{ mb: 2, letterSpacing: 1 }}>
+                        Todo List
+                      </Typography>
+                      <Box sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                        <List sx={{ p: 0 }}>
+                          {todos.length === 0 && (
+                            <Typography align="center" color="text.secondary" sx={{ py: 2 }}>
+                              No todos yet. Add one!
+                            </Typography>
+                          )}
+                          {Array.isArray(todos) && [...todos]
+                            .sort((a, b) => (b.priority === 'High') - (a.priority === 'High') || (b.priority === 'Medium') - (a.priority === 'Medium'))
+                            .map((todo, idx) => (
                               <React.Fragment key={todo.id}>
-                                <TodoItem
-                                  todo={todo}
-                                  onToggle={toggleTodo}
-                                  onDelete={deleteTodo}
-                                />
+                                <ListItem
+                                  sx={{
+                                    borderLeft: todo.priority === 'High' ? '5px solid #FF6B6B' : todo.priority === 'Medium' ? '5px solid #FFD600' : '5px solid transparent',
+                                    bgcolor: todo.priority === 'High' ? '#FFF3F3' : todo.priority === 'Medium' ? '#FFFBEA' : 'inherit',
+                                    mb: 1,
+                                    borderRadius: 2,
+                                  }}
+                                  secondaryAction={
+                                    <IconButton edge="end" aria-label="delete" onClick={() => deleteTodo(todo.id)}>
+                                      <DeleteIcon />
+                                    </IconButton>
+                                  }
+                                >
+                                  <Checkbox
+                                    edge="start"
+                                    checked={todo.completed}
+                                    tabIndex={-1}
+                                    disableRipple
+                                    onChange={() => toggleTodo(todo)}
+                                  />
+                                  <ListItemText
+                                    primary={todo.title}
+                                    secondary={todo.description}
+                                  />
+                                  <Typography variant="caption" color="text.secondary" sx={{ minWidth: 80, textAlign: 'right' }}>
+                                    {todo.date}
+                                  </Typography>
+                                </ListItem>
                                 {idx < todos.length - 1 && <Box sx={{ height: 1, bgcolor: 'divider', my: 1, mx: 1, borderRadius: 1 }} />}
                               </React.Fragment>
                             ))}
-                          </List>
-                        </Box>
-                      </Paper>
-                    </Grid>
-                  </Grid>
+                        </List>
+                      </Box>
+                    </Paper>
+                  </Box>
                 } />
                 <Route path="/analytics" element={
                   <AnalyticsPage

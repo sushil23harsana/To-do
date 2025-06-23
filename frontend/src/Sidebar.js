@@ -8,6 +8,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Link, useLocation } from 'react-router-dom';
 import MotivationalQuote from './MotivationalQuote';
 import StreakTracker from './StreakTracker';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const drawerWidth = 240;
 const miniWidth = 72;
@@ -80,6 +82,11 @@ const Sidebar = ({ mode, toggleTheme, todos = [], open = true, onToggle }) => {
         <Box sx={{ p: open ? 2 : 1, display: 'flex', justifyContent: 'center', width: '100%' }}>
           <IconButton onClick={toggleTheme} color="inherit" size={open ? 'medium' : 'small'}>
             {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+        </Box>
+        <Box sx={{ p: 1, display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <IconButton onClick={onToggle} size="small">
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </Box>
       </Box>

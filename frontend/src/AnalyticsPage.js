@@ -18,14 +18,15 @@ const AnalyticsPage = ({
   setAnalyticsKeyword,
 }) => {
   return (
-    <Box sx={{ mt: 4 }}>
+    <Box sx={{ mt: 4, width: '100%' }}>
       <Fade in={true} timeout={700}>
-        <Card sx={{ p: 4, borderRadius: 4, boxShadow: 4, bgcolor: 'background.paper' }}>
+        <Card sx={{ p: 4, borderRadius: 4, boxShadow: 4, bgcolor: 'background.paper', width: '100%' }}>
           <Typography variant="h4" fontWeight={700} gutterBottom color="secondary.main">
             AI Analytics
           </Typography>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mb={3}>
-            <FormControl sx={{ minWidth: 140 }}>
+          {/* Filters Row */}
+          <Stack direction="row" spacing={2} alignItems="center" mb={3} flexWrap="wrap">
+            <FormControl size="small" sx={{ minWidth: 120 }}>
               <InputLabel id="status-label">Status</InputLabel>
               <Select
                 labelId="status-label"
@@ -42,20 +43,21 @@ const AnalyticsPage = ({
               label="Keyword"
               value={analyticsKeyword}
               onChange={e => setAnalyticsKeyword(e.target.value)}
-              sx={{ minWidth: 180 }}
+              size="small"
+              sx={{ minWidth: 140 }}
             />
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 label="Start Date"
                 value={startDate}
                 onChange={setStartDate}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField {...params} size="small" sx={{ minWidth: 120 }} />}
               />
               <DatePicker
                 label="End Date"
                 value={endDate}
                 onChange={setEndDate}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField {...params} size="small" sx={{ minWidth: 120 }} />}
               />
             </LocalizationProvider>
             <Button
@@ -63,11 +65,13 @@ const AnalyticsPage = ({
               color="secondary"
               onClick={fetchAnalytics}
               disabled={loadingAnalytics}
-              sx={{ fontWeight: 600, px: 4, height: '56px', boxShadow: 2, transition: 'transform 0.15s, box-shadow 0.15s', '&:hover': { transform: 'scale(1.04)', boxShadow: 4 } }}
+              size="small"
+              sx={{ fontWeight: 600, px: 3, height: 40, boxShadow: 2, minWidth: 120 }}
             >
               {loadingAnalytics ? "Analyzing..." : "Get Analytics"}
             </Button>
           </Stack>
+          {/* Result Section */}
           <Paper elevation={0} sx={{ p: 3, borderRadius: 3, bgcolor: '#f7f8fa', minHeight: 60, mt: 2 }}>
             <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
               {analytics}
