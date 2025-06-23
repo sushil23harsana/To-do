@@ -156,19 +156,21 @@ function App() {
                             label="Date"
                             value={date}
                             onChange={setDate}
-                            slotProps={{
-                              textField: {
-                                fullWidth: true,
-                                sx: { minWidth: 180, bgcolor: 'background.paper' },
-                                InputProps: {
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                fullWidth
+                                sx={{ minWidth: 180, bgcolor: 'background.paper' }}
+                                InputProps={{
+                                  ...params.InputProps,
                                   endAdornment: (
                                     <InputAdornment position="end">
                                       <CalendarTodayIcon color="action" />
                                     </InputAdornment>
                                   )
-                                }
-                              }
-                            }}
+                                }}
+                              />
+                            )}
                           />
                         </LocalizationProvider>
                         <Button
