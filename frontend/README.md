@@ -1,3 +1,74 @@
+# App Workflow Documentation
+
+## 1. Frontend (React)
+- **Location:** `frontend/`
+- **Stack:** React, Material-UI (MUI), Custom Theme
+
+### Workflow:
+1. **App Initialization**
+   - The app starts from `src/index.js`, which renders the main `App` component.
+   - The custom theme from `src/theme.js` is applied using MUI's ThemeProvider.
+
+2. **User Interface**
+   - **Sidebar Navigation:** `Sidebar.js` and `DashboardSidebar.js` provide navigation between pages (e.g., Dashboard, Analytics).
+   - **Main Pages:**
+     - `DashboardPage.js`: Displays the main to-do dashboard.
+     - `AnalyticsPage.js`: Shows analytics and statistics about tasks.
+   - **To-Do Management:**
+     - `TodoItem.js`: Represents individual to-do items.
+     - Users can add, edit, complete, or delete tasks.
+   - **Motivation & Streaks:**
+     - `MotivationalQuote.js`: Displays motivational quotes.
+     - `StreakTracker.js`: Tracks and displays user streaks for task completion.
+
+3. **API Communication**
+   - The frontend communicates with the backend (Django) via HTTP requests (likely using `fetch` or `axios`).
+   - CRUD operations on to-dos are sent to the backend endpoints.
+
+---
+
+## 2. Backend (Django)
+- **Location:** `backend/`
+- **Stack:** Django, Django REST Framework
+
+### Workflow:
+1. **App Initialization**
+   - Django project is started via `manage.py`.
+   - Settings are configured in `backend/settings.py`.
+
+2. **API Endpoints**
+   - URLs are defined in `backend/urls.py` and `todos/urls.py`.
+   - Views in `todos/views.py` handle requests for to-do operations (list, create, update, delete).
+   - Serializers in `todos/serializers.py` convert model instances to JSON and validate incoming data.
+
+3. **Database**
+   - Models in `todos/models.py` define the structure of to-do items.
+   - Migrations are managed in `todos/migrations/`.
+
+4. **Admin & Testing**
+   - Admin interface is set up in `todos/admin.py`.
+   - Tests are written in `todos/tests.py`.
+
+---
+
+## 3. Deployment & Environment
+- **Dockerized Setup:**
+  - `docker-compose.yml` orchestrates both frontend and backend containers.
+  - Each has its own `Dockerfile` for building images.
+
+---
+
+## Typical User Flow
+1. **User opens the app in the browser.**
+2. **Frontend loads and displays the dashboard.**
+3. **User interacts with the UI to manage to-dos.**
+4. **Frontend sends API requests to the backend.**
+5. **Backend processes requests, interacts with the database, and returns responses.**
+6. **Frontend updates the UI based on backend responses.**
+7. **Analytics and streaks are updated in real-time.**
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
