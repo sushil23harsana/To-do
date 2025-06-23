@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Container, Typography, TextField, Button, List, ListItem, ListItemText,
-  Checkbox, IconButton, Paper, Box, Stack
+  Checkbox, IconButton, Paper, Box, Stack, Card
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -10,11 +10,14 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import AnalyticsPage from "./AnalyticsPage";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
+import getTheme from './theme';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import InputAdornment from '@mui/material/InputAdornment';
+import Sidebar from './Sidebar';
+import TodoItem from "./TodoItem";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const API_BASE = process.env.REACT_APP_API_BASE;
@@ -31,13 +34,8 @@ function App() {
   const [mode, setMode] = useState('light');
   const [analyticsStatus, setAnalyticsStatus] = useState('all');
   const [analyticsKeyword, setAnalyticsKeyword] = useState('');
-  const theme = createTheme({
-    palette: {
-      mode,
-      primary: { main: '#1976d2' },
-      secondary: { main: '#d32f2f' },
-    },
-  });
+
+  const theme = getTheme(mode);
 
   // Fetch todos
   useEffect(() => {
@@ -110,173 +108,112 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', color: 'text.primary', py: 6 }}>
-          <Container maxWidth="md">
-            <Paper elevation={6} sx={{ p: 6, borderRadius: 5, boxShadow: 6, minHeight: '80vh', display: 'flex', flexDirection: 'column', gap: 5, bgcolor: 'background.paper' }}>
-              {/* Navigation Bar */}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                <Typography variant="h4" fontWeight={800} color="primary.main" sx={{ letterSpacing: 2 }}>
-                  Todo App
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Button component={Link} to="/" color="primary" sx={{ fontWeight: 600, mr: 2 }}>Todos</Button>
-                  <Button component={Link} to="/analytics" color="secondary" sx={{ fontWeight: 600, mr: 2 }}>Analytics</Button>
-                  <IconButton onClick={toggleTheme} color="inherit">
-                    {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-                  </IconButton>
-                </Box>
-              </Box>
-              <Routes>
-                <Route path="/" element={
-                  <>
-                    {/* Add Todo Section */}
-                    <Box sx={{ mb: 4 }}>
-                      <Typography variant="h5" fontWeight={700} gutterBottom color="secondary.main">
-                        Add a New Todo
-                      </Typography>
-                      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                        <TextField
-                          label="Title"
-                          variant="outlined"
-                          fullWidth
-                          value={title}
-                          onChange={e => setTitle(e.target.value)}
-                          onKeyDown={e => e.key === "Enter" && addTodo()}
-                        />
-                        <TextField
-                          label="Description"
-                          variant="outlined"
-                          fullWidth
-                          value={description}
-                          onChange={e => setDescription(e.target.value)}
-                          onKeyDown={e => e.key === "Enter" && addTodo()}
-                        />
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                          <DatePicker
-                            label="Date"
-                            value={date}
-                            onChange={setDate}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                fullWidth
-                                sx={{ minWidth: 180, bgcolor: 'background.paper' }}
-                                InputProps={{
-                                  ...params.InputProps,
-                                  endAdornment: (
-                                    <InputAdornment position="end">
-                                      <CalendarTodayIcon color="action" />
-                                    </InputAdornment>
-                                  )
-                                }}
-                              />
-                            )}
+        <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default', color: 'text.primary' }}>
+          <Sidebar mode={mode} toggleTheme={toggleTheme} todos={todos} />
+          <Box sx={{ flexGrow: 1, ml: '240px', py: 6 }}>
+            <Container maxWidth="md">
+              <Paper elevation={6} sx={{ p: 6, borderRadius: 5, boxShadow: 6, minHeight: '80vh', display: 'flex', flexDirection: 'column', gap: 5, bgcolor: 'background.paper' }}>
+                <Routes>
+                  <Route path="/" element={
+                    <>
+                      {/* Add Todo Section */}
+                      <Card sx={{ mb: 4, borderRadius: 3, boxShadow: 3, p: 3, bgcolor: 'background.paper' }}>
+                        <Typography variant="h5" fontWeight={700} gutterBottom color="secondary.main">
+                          Add a New Todo
+                        </Typography>
+                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                          <TextField
+                            label="Title"
+                            variant="outlined"
+                            fullWidth
+                            value={title}
+                            onChange={e => setTitle(e.target.value)}
+                            onKeyDown={e => e.key === "Enter" && addTodo()}
                           />
-                        </LocalizationProvider>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={addTodo}
-                          sx={{ fontWeight: 600, px: 4, height: '56px' }}
-                        >
-                          Add
-                        </Button>
-                      </Stack>
-                    </Box>
-                    {/* Todo List Section */}
-                    <Box sx={{ mb: 4 }}>
-                      <Typography variant="h5" fontWeight={700} gutterBottom color="secondary.main">
-                        Todo List
-                      </Typography>
-                      <Paper elevation={2} sx={{ p: 3, borderRadius: 3, bgcolor: '#f0f4f8', maxHeight: '40vh', overflowY: 'auto' }}>
-                        <List>
-                          {todos.length === 0 && (
-                            <Typography align="center" color="text.secondary">
-                              No todos yet. Add one!
-                            </Typography>
-                          )}
-                          {Array.isArray(todos) && todos.map(todo => (
-                            <ListItem
-                              key={todo.id}
-                              sx={{
-                                mb: 2,
-                                borderRadius: 2,
-                                bgcolor: todo.completed ? "#d0f5e8" : "#ffe0e0",
-                                boxShadow: 1,
-                                transition: "background 0.3s",
-                                alignItems: 'flex-start',
-                                py: 2
-                              }}
-                              secondaryAction={
-                                <IconButton edge="end" color="error" onClick={() => deleteTodo(todo.id)}>
-                                  <DeleteIcon />
-                                </IconButton>
-                              }
-                            >
-                              <Checkbox
-                                checked={todo.completed}
-                                onChange={() => toggleTodo(todo)}
-                                sx={{
-                                  color: todo.completed ? "success.main" : "error.main",
-                                  mt: 1
-                                }}
+                          <TextField
+                            label="Description"
+                            variant="outlined"
+                            fullWidth
+                            value={description}
+                            onChange={e => setDescription(e.target.value)}
+                            onKeyDown={e => e.key === "Enter" && addTodo()}
+                          />
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                              label="Date"
+                              value={date}
+                              onChange={setDate}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  fullWidth
+                                  sx={{ minWidth: 180, bgcolor: 'background.paper' }}
+                                  InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                      <InputAdornment position="end">
+                                        <CalendarTodayIcon color="action" />
+                                      </InputAdornment>
+                                    )
+                                  }}
+                                />
+                              )}
+                            />
+                          </LocalizationProvider>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={addTodo}
+                            sx={{ fontWeight: 600, px: 4, height: '56px', boxShadow: 2 }}
+                          >
+                            Add
+                          </Button>
+                        </Stack>
+                      </Card>
+                      {/* Todo List Section */}
+                      <Box sx={{ mb: 4 }}>
+                        <Typography variant="h5" fontWeight={700} gutterBottom color="secondary.main">
+                          Todo List
+                        </Typography>
+                        <Paper elevation={2} sx={{ p: 3, borderRadius: 3, bgcolor: '#f0f4f8', maxHeight: '40vh', overflowY: 'auto' }}>
+                          <List>
+                            {todos.length === 0 && (
+                              <Typography align="center" color="text.secondary">
+                                No todos yet. Add one!
+                              </Typography>
+                            )}
+                            {Array.isArray(todos) && todos.map(todo => (
+                              <TodoItem
+                                key={todo.id}
+                                todo={todo}
+                                onToggle={toggleTodo}
+                                onDelete={deleteTodo}
                               />
-                              <ListItemText
-                                primary={
-                                  <>
-                                    <Typography variant="h6" fontWeight={700} color={todo.completed ? "success.main" : "error.main"}>
-                                      {todo.title}
-                                    </Typography>
-                                    {todo.description && (
-                                      <Typography variant="body2" sx={{ fontStyle: 'italic', color: '#666', mb: 1 }}>
-                                        {todo.description}
-                                      </Typography>
-                                    )}
-                                  </>
-                                }
-                                secondary={
-                                  <Box>
-                                    <Typography variant="caption" color="text.secondary">
-                                      Date: {todo.date}
-                                    </Typography>
-                                    {todo.created_at && (
-                                      <Typography variant="caption" color="text.secondary" sx={{ ml: 2 }}>
-                                        Created: {new Date(todo.created_at).toLocaleString()}
-                                      </Typography>
-                                    )}
-                                  </Box>
-                                }
-                                sx={{
-                                  textDecoration: todo.completed ? "line-through" : "none",
-                                  fontWeight: 500,
-                                  fontSize: "1.1rem"
-                                }}
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-                      </Paper>
-                    </Box>
-                  </>
-                } />
-                <Route path="/analytics" element={
-                  <AnalyticsPage
-                    analytics={analytics}
-                    loadingAnalytics={loadingAnalytics}
-                    startDate={startDate}
-                    endDate={endDate}
-                    setStartDate={setStartDate}
-                    setEndDate={setEndDate}
-                    fetchAnalytics={fetchAnalytics}
-                    analyticsStatus={analyticsStatus}
-                    setAnalyticsStatus={setAnalyticsStatus}
-                    analyticsKeyword={analyticsKeyword}
-                    setAnalyticsKeyword={setAnalyticsKeyword}
-                  />
-                } />
-              </Routes>
-            </Paper>
-          </Container>
+                            ))}
+                          </List>
+                        </Paper>
+                      </Box>
+                    </>
+                  } />
+                  <Route path="/analytics" element={
+                    <AnalyticsPage
+                      analytics={analytics}
+                      loadingAnalytics={loadingAnalytics}
+                      startDate={startDate}
+                      endDate={endDate}
+                      setStartDate={setStartDate}
+                      setEndDate={setEndDate}
+                      fetchAnalytics={fetchAnalytics}
+                      analyticsStatus={analyticsStatus}
+                      setAnalyticsStatus={setAnalyticsStatus}
+                      analyticsKeyword={analyticsKeyword}
+                      setAnalyticsKeyword={setAnalyticsKeyword}
+                    />
+                  } />
+                </Routes>
+              </Paper>
+            </Container>
+          </Box>
         </Box>
       </Router>
     </ThemeProvider>
