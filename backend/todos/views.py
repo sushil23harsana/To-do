@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from datetime import datetime
 import requests
+from django.conf import settings
 
 # Create your views here.
 
@@ -27,7 +28,7 @@ def todo_analytics(request):
 
     mistral_api_url = "https://api.mistral.ai/v1/chat/completions"
     headers = {
-        "Authorization": "Bearer yPBkkj9zRx0vFO3UNsKhBVa1U4iwoKV8",
+        "Authorization": f"Bearer {settings.MISTRAL_API_KEY}",
         "Content-Type": "application/json"
     }
     payload = {
